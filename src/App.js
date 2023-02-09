@@ -1,14 +1,17 @@
 import './App.css';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import PageSignin from './pages/signin';
+import { useEffect } from 'react';
+import { BrowserRouter } from 'react-router-dom';
+import { listen } from './redux/listener';
+import { AppRoutes } from './routes';
 
 function App() {
+  useEffect(() => {
+    listen();
+  }, [])
+
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<>home</>} />
-        <Route path="signin" element={<PageSignin />} />
-      </Routes>
+      <AppRoutes />
     </BrowserRouter>
   );
 }

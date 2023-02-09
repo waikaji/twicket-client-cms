@@ -1,17 +1,31 @@
 import React, { useState } from 'react';
-import SButton from '../../components/Button/index';
 import { Container } from 'react-bootstrap';
-import Form from 'react-bootstrap/Form';
 import Card from 'react-bootstrap/Card';
-import TextInputWithLabel from '../../components/TextInputWithLabel';
-import axios from 'axios';
+import SAlert from '../../components/Alert/index';
+import { useNavigate } from 'react-router-dom';
+import { postData } from '../../utils/fetch';
+import { useDispatch } from 'react-redux';
+import { userLogin } from '../../redux/auth/actions';
+
+import SForm from './form';
 
 function PageSignin() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
 
   const [form, setForm] = useState({
     email: '',
     password: ''
   });
+
+  const [alert, setAlert] = useState({
+    status: false,
+    type: 'danger',
+    message: ''
+  });
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value })
@@ -19,46 +33,32 @@ function PageSignin() {
 
   const handleSubmit = async () => {
     try {
-      const res = await axios.post('http://localhost:9000/api/v1/cms/auth/signin', 
-      {
-        email: form.email,
-        password: form.password
-      })
+      setIsLoading(true);
+      const res = await postData(`/cms/auth/signin`, form);
 
-      console.log(res);
+      dispatch(userLogin(res.data.data.token, res.data.data.role));
+      setIsLoading(false);
+      navigate('/');
     } catch(err) {
-      console.log(err);
+      setAlert({
+        status: true,
+        type: 'danger',
+        message: err?.response?.data?.msg ?? 'Internal Server Error'
+      });
+      setIsLoading(false);
     }
   }
 
+
   return (
-    <Container md={12}>
+    <Container md={12} className='my-5'>
+      <div className='m-auto' style={{ width: '50%' }}>
+        { alert.status && <SAlert type={alert.type} message={alert.message} /> }
+      </div>
       <Card style={{ width: '50%' }} className='m-auto mt-5'>
         <Card.Body>
           <Card.Title className='text-center'>Form Signin</Card.Title>
-          <Form>
-            <TextInputWithLabel 
-              label='Email Address' 
-              name='email' 
-              value={form.email} 
-              type='email' 
-              placeholder='Enter Email' 
-              onChange={handleChange} 
-            />
-
-            <TextInputWithLabel 
-              label='Password' 
-              name='password' 
-              value={form.password} 
-              type='password' 
-              placeholder='Enter Passwords' 
-              onChange={handleChange} 
-            />
-            
-            <SButton action={handleSubmit} variant="primary" type="submit">
-              Submit
-            </SButton>
-          </Form>
+          <SForm form={form} handleChange={handleChange} handleSubmit={handleSubmit} isLoading={isLoading} />
         </Card.Body>
       </Card>
     </Container>
