@@ -41,6 +41,7 @@ function PageSignin() {
         userLogin(
           res.data.data.token,
           res.data.data.role,
+          res.data.data.email,
           res.data.data.refreshToken
         )
       );
