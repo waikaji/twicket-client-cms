@@ -150,6 +150,43 @@ function EventsCreate() {
         message: res.response.data.msg,
       });
     }
+    
+    // try {
+    //   const payload = {
+    //     date: form.date,
+    //     image: form.file,
+    //     title: form.title,
+    //     price: form.price,
+    //     about: form.about,
+    //     venueName: form.venueName,
+    //     tagline: form.tagline,
+    //     keyPoint: form.keyPoint,
+    //     category: form.category.value,
+    //     talent: form.talent.value,
+    //     status: form.status,
+    //     tickets: form.tickets,
+    //   };
+
+    //   const res = await postData('/cms/events', payload);
+
+    //   dispatch(
+    //     setNotif(
+    //       true,
+    //       'success',
+    //       `berhasil tambah events ${res.data.data.title}`
+    //     )
+    //   );
+    //   navigate('/events');
+    //   setIsLoading(false);
+    // } catch (err) {
+    //   setIsLoading(false);
+    //   setAlert({
+    //     ...alert,
+    //     status: true,
+    //     type: 'danger',
+    //     message: err.response.data.msg,
+    //   });
+    // }
   };
 
   const handleChangeKeyPoint = (e, i) => {

@@ -100,15 +100,15 @@ function PaymentsEdit() {
 
   const handleSubmit = async () => {
     setIsLoading(true);
-    try {
-      const payload = {
-        image: form.file,
-        role: form.role,
-        type: form.type,
-      };
+    
+    const payload = {
+      image: form.file,
+      role: form.role,
+      type: form.type,
+    };
 
-      const res = await putData(`/cms/payments/${paymentId}`, payload);
-
+    const res = await putData(`/cms/payments/${paymentId}`, payload);
+    if (res.data.data) {
       dispatch(
         setNotif(
           true,
@@ -118,15 +118,43 @@ function PaymentsEdit() {
       );
       navigate('/payments');
       setIsLoading(false);
-    } catch (err) {
+    } else {
       setIsLoading(false);
       setAlert({
         ...alert,
         status: true,
         type: 'danger',
-        message: err.response.data.msg,
+        message: res.response.data.msg,
       });
     }
+
+    // try {
+    //   const payload = {
+    //     image: form.file,
+    //     role: form.role,
+    //     type: form.type,
+    //   };
+
+    //   const res = await putData(`/cms/payments/${paymentId}`, payload);
+
+    //   dispatch(
+    //     setNotif(
+    //       true,
+    //       'success',
+    //       `berhasil ubah payments ${res.data.data.type}`
+    //     )
+    //   );
+    //   navigate('/payments');
+    //   setIsLoading(false);
+    // } catch (err) {
+    //   setIsLoading(false);
+    //   setAlert({
+    //     ...alert,
+    //     status: true,
+    //     type: 'danger',
+    //     message: err.response.data.msg,
+    //   });
+    // }
   };
 
   return (

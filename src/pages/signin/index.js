@@ -32,21 +32,44 @@ function PageSignin() {
   }
 
   const handleSubmit = async () => {
-    try {
-      setIsLoading(true);
-      const res = await postData(`/cms/auth/signin`, form);
+    setIsLoading(true);
 
-      dispatch(userLogin(res.data.data.token, res.data.data.role));
+    const res = await postData(`/cms/auth/signin`, form);
+
+    if (res?.data?.data) {
+      dispatch(
+        userLogin(
+          res.data.data.token,
+          res.data.data.role,
+          res.data.data.refreshToken
+        )
+      );
       setIsLoading(false);
       navigate('/');
-    } catch(err) {
+    } else {
+      setIsLoading(false);
       setAlert({
         status: true,
+        message: res?.response?.data?.msg ?? 'Internal server error',
         type: 'danger',
-        message: err?.response?.data?.msg ?? 'Internal Server Error'
       });
-      setIsLoading(false);
     }
+    
+    // try {
+    //   setIsLoading(true);
+    //   const res = await postData(`/cms/auth/signin`, form);
+
+    //   dispatch(userLogin(res.data.data.token, res.data.data.role));
+    //   setIsLoading(false);
+    //   navigate('/');
+    // } catch(err) {
+    //   setAlert({
+    //     status: true,
+    //     type: 'danger',
+    //     message: err?.response?.data?.msg ?? 'Internal Server Error'
+    //   });
+    //   setIsLoading(false);
+    // }
   }
 
 
